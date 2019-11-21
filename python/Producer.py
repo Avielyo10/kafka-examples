@@ -3,15 +3,17 @@ from confluent_kafka import Producer
 
 p = Producer({'bootstrap.servers': 'localhost:9092'})
 
+
 def delivery_report(err, msg):
     """ Called once for each message produced to indicate delivery result.
         Triggered by poll() or flush(). """
     if err is not None:
-        print('Message delivery failed: {}'.format(err))
+        print(f'Message delivery failed: {err}')
     else:
-        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+        print(f'Message delivered to {msg.topic()} [{msg.partition()}]')
 
-for data in ['a','b','c','d']:
+
+for data in ['a', 'b', 'c', 'd']:
     # Trigger any available delivery report callbacks from previous produce() calls
     p.poll(0)
 
