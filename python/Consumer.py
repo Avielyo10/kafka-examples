@@ -8,16 +8,20 @@ c = Consumer({
 })
 
 c.subscribe(['my-topic'])
+try:
+    while True:
+        msg = c.poll(1.0)
 
-while True:
-    msg = c.poll(1.0)
+        if msg is None:
+            continue
+        if msg.error():
+            print(f"Consumer error: {msg.error()}")
+            continue
 
-    if msg is None:
-        continue
-    if msg.error():
-        print("Consumer error: {}".format(msg.error()))
-        continue
+        print(f"Received message: {msg.value().decode('utf-8')}")
 
-    print('Received message: {}'.format(msg.value().decode('utf-8')))
+except KeyboardInterrupt as e:
+    print("Aborted by user")
 
-c.close()
+finally:
+    c.close()
